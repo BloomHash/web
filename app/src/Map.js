@@ -1,6 +1,7 @@
 import React from "react";
 import L from "leaflet";
 import statesData from './us-states'
+import 'leaflet.zoomhome';
 import './map.css'
 
 const style = {
@@ -15,22 +16,14 @@ const mapStyle = (feature) => {
         color: "white",
         dashArray: "3",
         fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.density)
+        fillColor: getColor(feature.properties.trump_fin - feature.properties.biden_fin)
     });
 }
 
 const getColor = (d) =>{
     return d > 1000
         ? "#800026"
-        : d > 500
-            ? "#BD0026"
-            : d > 200
-                ? "#E31A1C"
-                : d > 100
-                    ? "#FC4E2A"
-                    : d > 50
-                        ? "#FD8D3C"
-                        : d > 20 ? "#FEB24C" : d > 10 ? "#FED976" : "#FFEDA0";
+            : "#0000FF";
 }
 
 class Map extends React.Component {
@@ -39,6 +32,7 @@ class Map extends React.Component {
         this.map = L.map("map", {
             center: [37.8, -96],
             zoom: 4,
+            zoomControl: false,
             layers: [
                 L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZmxvcnZhbmRla2VyY2tob3ZlIiwiYSI6ImNqdGZyMmtrejAxYWw0M3A2OGtwdTMxNWEifQ.5U-KSDZfyKNC_Z74fEWj6g",
                     {
@@ -57,6 +51,9 @@ class Map extends React.Component {
 
         this.info = L.control();
 
+        const zoomHome = L.Control.zoomHome();
+        zoomHome.addTo(this.map);
+
         this.info.onAdd = function(map) {
             this._div = L.DomUtil.create("div", "info");
             this.update();
@@ -65,13 +62,16 @@ class Map extends React.Component {
 
         this.info.update = function(props) {
             this._div.innerHTML =
-                "<h4>US Population Density</h4>" +
+                "<h4>US Election Results</h4>" +
                 (props
                     ? "<b>" +
                     props.name +
                     "</b><br />" +
-                    props.density +
-                    " people / mi<sup>2</sup>"
+                    props.trump_fin.toLocaleString() +
+                    " Trump Vote Total"
+                    +"<br/>" +
+                    props.biden_fin.toLocaleString() +
+                    " Biden Vote Total"
                     : "Hover over a state");
         };
 
@@ -88,7 +88,7 @@ class Map extends React.Component {
         });
     }
     highlightFeature = (e) => {
-        var layer = e.target;
+        const layer = e.target;
         layer.setStyle({
             weight: 5,
             color: "#666",
