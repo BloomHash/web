@@ -1,32 +1,16 @@
-import React from "react";
+import React, {Component} from "react";
 import L from "leaflet";
-import statesData from './us-states'
 import 'leaflet.zoomhome';
-import './map.css'
+import statesData from './us-states';
+import './map.css';
 
 const style = {
     width: "100%",
     height: "600px"
 };
 
-const mapStyle = (feature) => {
-    return ({
-        weight: 2,
-        opacity: 1,
-        color: "white",
-        dashArray: "3",
-        fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.trump_fin - feature.properties.biden_fin)
-    });
-}
+class MapDefault extends Component {
 
-const getColor = (d) =>{
-    return d > 1000
-        ? "#800026"
-            : "#0000FF";
-}
-
-class Map extends React.Component {
     componentDidMount() {
         // create map
         this.map = L.map("map", {
@@ -45,7 +29,7 @@ class Map extends React.Component {
         });
 
         this.geojson = L.geoJson(statesData, {
-            style: mapStyle,
+            style: this.mapStyle,
             onEachFeature: this.onEachFeature
         }).addTo(this.map);
 
@@ -80,6 +64,25 @@ class Map extends React.Component {
         // add layer
         this.layer = L.layerGroup().addTo(this.map);
     }
+
+    mapStyle = (feature) => {
+        return ({
+            weight: 2,
+            opacity: 1,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.7,
+            fillColor: this.getColor(feature.properties.trump_fin - feature.properties.biden_fin)
+        });
+    }
+
+    getColor = (d) =>{
+
+        return d > 1000
+            ? "#800026"
+            : "#0000FF";
+    }
+
     onEachFeature = (feature, layer) => {
         layer.on({
             mouseover: this.highlightFeature,
@@ -87,6 +90,7 @@ class Map extends React.Component {
             click: this.zoomToFeature
         });
     }
+
     highlightFeature = (e) => {
         const layer = e.target;
         layer.setStyle({
@@ -111,5 +115,4 @@ class Map extends React.Component {
         return <div id="map" style={style} />;
     }
 }
-
-export default Map;
+export default MapDefault;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 function Copyright() {
     return (
@@ -16,19 +16,22 @@ function Copyright() {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = theme => ({
     footer: {
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
-}));
+});
 
-export default function Footer() {
-    const classes = useStyles();
+class Footer extends Component {
 
-    return(
-        <footer className={classes.footer}>
-            <Copyright />
-        </footer>
-    );
+    render() {
+        const { classes } = this.props;
+        return (
+            <footer className={classes.footer}>
+                <Copyright/>
+            </footer>
+        );
+    }
 }
+export default withStyles(useStyles)(Footer)
