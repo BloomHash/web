@@ -1,26 +1,28 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from '@material-ui/core/styles';
+import withStyles from "@material-ui/core/styles/withStyles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = ({
     appBar: {
         position: 'relative',
     },
-}));
+});
 
-export default function Header() {
-    const classes = useStyles();
-
-    return(
-        <AppBar position="absolute" color="default" className={classes.appBar}>
-            <Toolbar>
-                <Typography variant="h6" color="inherit" noWrap>
-                    BloomHash
-                </Typography>
-            </Toolbar>
-        </AppBar>
-    );
+class Header extends Component {
+    render() {
+        const { classes } = this.props;
+        return (
+            <AppBar position="absolute" color="default" className={classes.appBar}>
+                <Toolbar>
+                    <Typography variant="h6" color="inherit" noWrap>
+                        BloomHash
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+        );
+    }
 }
+export default withStyles(useStyles)(Header)
