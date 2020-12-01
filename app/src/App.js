@@ -10,7 +10,7 @@ class App extends Component {
         super(props);
 
         this.state = {
-            isDefaultDataSet: true
+            dataSetType: 'Actual'
         };
     }
 
@@ -19,30 +19,28 @@ class App extends Component {
             <div>
                 <Header/>
                 {this.renderMap()}
-                <Controls toggleDataset={() => this.toggleDataset()}
-                          isDefaultDataSet={this.state.isDefaultDataSet}/>
+                <Controls toggleDataset={(value) => this.toggleDataset(value)}/>
                 <Footer/>
             </div>
         );
     }
 
     renderMap() {
-        if (this.state.isDefaultDataSet) {
+        if (this.state.dataSetType === 'Actual') {
             return (
                 <MapDefault/>
             );
-        } else {
+        }
+        if (this.state.dataSetType === 'Twitter') {
             return (
                 <MapTwitter/>
             );
         }
     }
 
-    toggleDataset(){
-        //console.log("GOT CALLED");
-        //console.log(this.state.isDefaultDataSet);
-        const current = this.state.isDefaultDataSet;
-        this.setState({isDefaultDataSet: !current});
+    toggleDataset(value){
+        this.setState({dataSetType: value});
+        console.log(this.state.dataSetType);
     }
 }
 
