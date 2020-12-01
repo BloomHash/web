@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import L from "leaflet";
 import 'leaflet.zoomhome';
-import statesData from './us-states';
+import statesData from '../us-states';
 import './map.css';
 
 const style = {
@@ -9,7 +9,7 @@ const style = {
     height: "600px"
 };
 
-class MapTwitter extends Component {
+class MapDefault extends Component {
 
     componentDidMount() {
         // create map
@@ -51,10 +51,10 @@ class MapTwitter extends Component {
                     ? "<b>" +
                     props.name +
                     "</b><br />" +
-                    props.trump_twit.toLocaleString() +
+                    props.trump_fin.toLocaleString() +
                     " Trump Vote Total"
                     +"<br/>" +
-                    props.biden_twit.toLocaleString() +
+                    props.biden_fin.toLocaleString() +
                     " Biden Vote Total"
                     : "Hover over a state");
         };
@@ -72,15 +72,31 @@ class MapTwitter extends Component {
             color: "white",
             dashArray: "3",
             fillOpacity: 0.7,
-            fillColor: this.getColor(feature.properties.trump_twit - feature.properties.biden_twit)
+            fillColor: this.getColor((feature.properties.biden_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100) - (feature.properties.trump_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100))
         });
     }
 
     getColor = (d) =>{
 
-        return d > 1000
-            ? "#800026"
-            : "#0000FF";
+        return d > 100
+            ? "#1A237E"
+            : d > 30
+                ? "#283593"
+                : d > 15
+                    ? "#3949AB"
+                    : d > 5
+                        ? "#5C6BC0"
+                        : d > 0
+                            ? "#9FA8DA"
+                            : d > -5
+                                ? "#EF9A9A"
+                                : d > -15
+                                    ? "#EF5350"
+                                    : d > -30
+                                        ? "#E53935"
+                                        : d > -100
+                                            ? "#C62828"
+                                            : "#B71C1C";
     }
 
     onEachFeature = (feature, layer) => {
@@ -115,4 +131,4 @@ class MapTwitter extends Component {
         return <div id="map" style={style} />;
     }
 }
-export default MapTwitter;
+export default MapDefault;
