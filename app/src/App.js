@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import MapDefault from './MapDefault';
+import MapDefault from './Map/MapDefault';
 import Controls from "./Controls";
 import Header from './Margins/Header';
 import Footer from "./Margins/Footer";
-import MapTwitter from "./MapTwitter";
+import MapTwitter from "./Map/MapTwitter";
+import MapPolls from "./Map/MapPolls";
 
 class App extends Component {
     constructor(props) {
@@ -34,6 +35,11 @@ class App extends Component {
         if (this.state.dataSetType === 'Twitter') {
             return (
                 <MapTwitter/>
+            );
+        }
+        if (this.state.dataSetType === 'Polls') {
+            return (
+                <MapPolls/>
             );
         }
     }
