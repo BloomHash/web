@@ -44,6 +44,17 @@ class MapDefault extends Component {
             return this._div;
         };
 
+        const getInfo = (biden, trump) => {
+            let vote = ((biden / (trump + biden) * 100) - (trump / (trump + biden) * 100)).toFixed(2);
+
+            if (vote < 0) {
+                return Math.abs(vote) + "% Trump";
+
+            } else {
+                return vote + "% Biden"
+            }
+        }
+
         this.info.update = function(props) {
             this._div.innerHTML =
                 "<h4>US Election Results</h4>" +
@@ -56,6 +67,9 @@ class MapDefault extends Component {
                     +"<br/>" +
                     props.biden_fin.toLocaleString() +
                     " Biden Vote Total"
+                    +"<br/>" + "<br/>" +
+                    getInfo(props.biden_fin, props.trump_fin) +
+                    " Vote Win Percentage"
                     : "Hover over a state");
         };
 

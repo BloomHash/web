@@ -44,6 +44,15 @@ class MapTwitter extends Component {
             return this._div;
         };
 
+        const getInfo = (tweet) => {
+            if (tweet < 0) {
+                return Math.abs(tweet) + "% Trump";
+
+            } else {
+                return tweet + "% Biden"
+            }
+        }
+
         this.info.update = function(props) {
             this._div.innerHTML =
                 "<h4>US Election Results</h4>" +
@@ -51,11 +60,8 @@ class MapTwitter extends Component {
                     ? "<b>" +
                     props.name +
                     "</b><br />" +
-                    props.trump_twit.toLocaleString() +
-                    " Trump Vote Total"
-                    +"<br/>" +
-                    props.biden_twit.toLocaleString() +
-                    " Biden Vote Total"
+                    getInfo(props.twitter) +
+                    " Vote Win Percentage"
                     : "Hover over a state");
         };
 
@@ -72,15 +78,31 @@ class MapTwitter extends Component {
             color: "white",
             dashArray: "3",
             fillOpacity: 0.7,
-            fillColor: this.getColor(feature.properties.trump_twit - feature.properties.biden_twit)
+            fillColor: this.getColor(feature.properties.twitter)
         });
     }
 
     getColor = (d) =>{
 
-        return d > 1000
-            ? "#800026"
-            : "#0000FF";
+        return d > 100
+            ? "#1A237E"
+            : d > 30
+                ? "#283593"
+                : d > 15
+                    ? "#3949AB"
+                    : d > 5
+                        ? "#5C6BC0"
+                        : d > 0
+                            ? "#9FA8DA"
+                            : d > -5
+                                ? "#EF9A9A"
+                                : d > -15
+                                    ? "#EF5350"
+                                    : d > -30
+                                        ? "#E53935"
+                                        : d > -100
+                                            ? "#C62828"
+                                            : "#B71C1C";
     }
 
     onEachFeature = (feature, layer) => {
