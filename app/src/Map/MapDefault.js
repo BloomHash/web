@@ -75,6 +75,20 @@ class MapDefault extends Component {
 
         this.info.addTo(this.map);
 
+        let legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+
+            let div = L.DomUtil.create('div', 'legend');
+
+            div.innerHTML = "<h4>Electoral College Votes</h4>" +
+                "<b>270 to win -</b><br/>Biden: 306<br/>Trump: 232";
+
+            return div;
+        };
+
+        legend.addTo(this.map);
+
         // add layer
         this.layer = L.layerGroup().addTo(this.map);
     }
