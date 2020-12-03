@@ -9,7 +9,7 @@ const style = {
     height: "600px"
 };
 
-class MapDefault extends Component {
+class MapCompActual extends Component {
 
     componentDidMount() {
         // create map
@@ -44,15 +44,15 @@ class MapDefault extends Component {
             return this._div;
         };
 
-        const getInfo = (biden, trump) => {
-            let vote = (biden / (trump + biden) * 100) - (trump / (trump + biden) * 100);
+        const getInfo = (biden, trump, twitter) => {
+            let vote = ((biden / (trump + biden) * 100) - (trump / (trump + biden) * 100));
 
-            if (vote < 0) {
-                return Math.abs(vote).toFixed(2) + "% Trump";
+            return Math.abs(vote - twitter).toFixed(2) + "%";
+        }
 
-            } else {
-                return vote.toFixed(2) + "% Biden"
-            }
+        const getPercent = (biden, trump) => {
+
+            return ((biden / (trump + biden) * 100) - (trump / (trump + biden) * 100)).toFixed(2) + "%";
         }
 
         this.info.update = function(props) {
@@ -62,14 +62,14 @@ class MapDefault extends Component {
                     ? "<b>" +
                     props.name +
                     "</b><br />" +
-                    props.trump_fin.toLocaleString() +
-                    " Trump Vote Total"
-                    +"<br/>" +
-                    props.biden_fin.toLocaleString() +
-                    " Biden Vote Total"
-                    + "<br/><br/>" +
-                    getInfo(props.biden_fin, props.trump_fin) +
-                    " Vote Win Percentage"
+                    getPercent(props.biden_fin, props.trump_fin) +
+                    " Actual Votes" +
+                    "<br/>" +
+                    props.twitter +
+                    "% Twitter Estimate" +
+                    "<br/><br/>" +
+                    getInfo(props.biden_fin, props.trump_fin, props.twitter) +
+                    " Vote Percentage Difference"
                     : "Hover over a state");
         };
 
@@ -86,31 +86,35 @@ class MapDefault extends Component {
             color: "white",
             dashArray: "3",
             fillOpacity: 0.7,
-            fillColor: this.getColor((feature.properties.biden_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100) - (feature.properties.trump_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100))
+            fillColor: this.getColor(((feature.properties.biden_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100) - (feature.properties.trump_fin / (feature.properties.trump_fin + feature.properties.biden_fin) * 100)) - feature.properties.twitter)
         });
     }
 
     getColor = (d) =>{
 
         return d > 100
-            ? "#1A237E"
+            ? "#E50900"
             : d > 30
-                ? "#283593"
+                ? "#E14D00"
                 : d > 15
-                    ? "#3949AB"
-                    : d > 5
-                        ? "#5C6BC0"
-                        : d > 0
-                            ? "#9FA8DA"
-                            : d > -5
-                                ? "#EF9A9A"
-                                : d > -15
-                                    ? "#EF5350"
-                                    : d > -30
-                                        ? "#E53935"
-                                        : d > -100
-                                            ? "#C62828"
-                                            : "#B71C1C";
+                    ? "#DD8E00"
+                    : d > 10
+                        ? "#D9CD00"
+                        : d > 5
+                            ? "#A1D500"
+                            : d > 0
+                                ? "#5FD200"
+                                : d > -5
+                                    ? "#5FD200"
+                                    : d > -10
+                                        ? "#A1D500"
+                                        : d > -15
+                                            ? "#D9CD00"
+                                            : d > -30
+                                                ? "#DD8E00"
+                                                : d > -100
+                                                    ? "#E14D00"
+                                                    : "#E50900";
     }
 
     onEachFeature = (feature, layer) => {
@@ -145,4 +149,4 @@ class MapDefault extends Component {
         return <div id="map" style={style} />;
     }
 }
-export default MapDefault;
+export default MapCompActual;
