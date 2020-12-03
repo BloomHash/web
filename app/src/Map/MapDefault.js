@@ -67,7 +67,7 @@ class MapDefault extends Component {
                     +"<br/>" +
                     props.biden_fin.toLocaleString() +
                     " Biden Vote Total"
-                    +"<br/>" + "<br/>" +
+                    + "<br/><br/>" +
                     getInfo(props.biden_fin, props.trump_fin) +
                     " Vote Win Percentage"
                     : "Hover over a state");
